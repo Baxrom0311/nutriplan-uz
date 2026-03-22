@@ -5,13 +5,14 @@ import { MEAL_TYPE_LABELS } from "@/lib/types";
 import AddFoodModal from "@/components/AddFoodModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getTodayDateInputValue, shiftDateInputValue } from "@/lib/date";
 import { Plus, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 const MEAL_TYPES: MealType[] = ["breakfast", "morning_snack", "lunch", "snack", "dinner", "evening_snack"];
 
 export default function FoodLogPage() {
-  const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [date, setDate] = useState(() => getTodayDateInputValue());
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
   const [foodModal, setFoodModal] = useState<{ open: boolean; mealType: MealType | null }>({ open: false, mealType: null });
@@ -31,9 +32,7 @@ export default function FoodLogPage() {
   useEffect(() => { fetchMeals(); }, [fetchMeals]);
 
   const shiftDate = (d: number) => {
-    const dt = new Date(date);
-    dt.setDate(dt.getDate() + d);
-    setDate(dt.toISOString().split("T")[0]);
+    setDate((currentDate) => shiftDateInputValue(currentDate, d));
   };
 
   const deleteItem = async (itemId: number) => {

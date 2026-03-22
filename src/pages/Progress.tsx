@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/api";
-import type { WeightLog } from "@/lib/types";
+import { getTodayDateInputValue } from "@/lib/date";
+import type { DailyMacroSummary, DailyWaterSummary, WeightLog } from "@/lib/types";
 import { useAuthStore } from "@/stores/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,11 +13,11 @@ import { toast } from "sonner";
 export default function ProgressPage() {
   const user = useAuthStore((s) => s.user);
   const [weights, setWeights] = useState<WeightLog[]>([]);
-  const [weeklyMacros, setWeeklyMacros] = useState<any[]>([]);
-  const [weeklyWater, setWeeklyWater] = useState<any[]>([]);
+  const [weeklyMacros, setWeeklyMacros] = useState<DailyMacroSummary[]>([]);
+  const [weeklyWater, setWeeklyWater] = useState<DailyWaterSummary[]>([]);
   const [weightModal, setWeightModal] = useState(false);
   const [newWeight, setNewWeight] = useState("");
-  const [newDate, setNewDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [newDate, setNewDate] = useState(() => getTodayDateInputValue());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -52,14 +53,14 @@ export default function ProgressPage() {
     .sort((a, b) => a.date.localeCompare(b.date))
     .map((w) => ({ date: w.date.slice(5), kg: parseFloat(w.weight_kg) }));
 
-  const macroData = (Array.isArray(weeklyMacros) ? weeklyMacros : []).map((d: any) => ({
-    date: (d.date || "").slice(5),
-    calories: Math.round(parseFloat(d.calories || d.total_calories || "0")),
+  const macroData = weeklyMacros.map((day) => ({
+    date: day.date.slice(5),
+    calories: Math.round(day.calories),
   }));
 
-  const waterData = (Array.isArray(weeklyWater) ? weeklyWater : []).map((d: any) => ({
-    date: (d.date || "").slice(5),
-    ml: d.amount_ml || d.total_ml || 0,
+  const waterData = weeklyWater.map((day) => ({
+    date: day.date.slice(5),
+    ml: day.amount_ml,
   }));
 
   if (loading) {

@@ -7,10 +7,9 @@ import CalorieRing from "@/components/CalorieRing";
 import MacroBar from "@/components/MacroBar";
 import AddFoodModal from "@/components/AddFoodModal";
 import { Button } from "@/components/ui/button";
+import { getTodayDateInputValue } from "@/lib/date";
 import { Plus, Droplets, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-
-const today = () => new Date().toISOString().split("T")[0];
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
@@ -23,8 +22,8 @@ export default function DashboardPage() {
   const fetchData = useCallback(async () => {
     try {
       const [mealsRes, waterRes] = await Promise.all([
-        api.get(`/meals/?date=${today()}`),
-        api.get(`/meals/water/?date=${today()}`),
+        api.get(`/meals/?date=${getTodayDateInputValue()}`),
+        api.get(`/meals/water/?date=${getTodayDateInputValue()}`),
       ]);
       setMeals(mealsRes.data.results || mealsRes.data);
       setWater(Array.isArray(waterRes.data) ? waterRes.data : waterRes.data.results || []);
@@ -48,7 +47,7 @@ export default function DashboardPage() {
 
   const addWater = async (ml: number) => {
     try {
-      await api.post("/meals/water/", { date: today(), amount_ml: ml });
+      await api.post("/meals/water/", { date: getTodayDateInputValue(), amount_ml: ml });
       fetchData();
       toast.success(`+${ml} ml suv qo'shildi`);
     } catch {
@@ -171,7 +170,7 @@ export default function DashboardPage() {
       <AddFoodModal
         open={foodModal.open}
         mealType={foodModal.mealType}
-        date={today()}
+        date={getTodayDateInputValue()}
         existingMeals={meals}
         onClose={() => setFoodModal({ open: false, mealType: null })}
         onAdded={fetchData}

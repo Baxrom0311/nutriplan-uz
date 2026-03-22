@@ -87,6 +87,19 @@ export interface PaginatedResponse<T> {
   results: T[];
 }
 
+export interface DailyMacroSummary {
+  date: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+export interface DailyWaterSummary {
+  date: string;
+  amount_ml: number;
+}
+
 export const MEAL_TYPE_LABELS: Record<MealType, { en: string; uz: string }> = {
   breakfast: { en: "Breakfast", uz: "Nonushta" },
   morning_snack: { en: "Morning Snack", uz: "Tushlik oldi gazak" },

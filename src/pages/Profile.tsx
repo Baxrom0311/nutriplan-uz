@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
-import { ACTIVITY_LABELS, GOAL_LABELS } from "@/lib/types";
+import { ACTIVITY_LABELS, GOAL_LABELS, type UserProfile } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,17 +9,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { LogOut, Calculator } from "lucide-react";
 
+type ProfileFormState = Pick<
+  UserProfile,
+  "gender" | "birth_date" | "height_cm" | "weight_kg" | "activity_level" | "goal"
+>;
+
+const buildProfileForm = (user: UserProfile | null): ProfileFormState => ({
+  gender: user?.gender || "male",
+  birth_date: user?.birth_date || "",
+  height_cm: user?.height_cm || "",
+  weight_kg: user?.weight_kg || "",
+  activity_level: user?.activity_level || "sedentary",
+  goal: user?.goal || "maintain_weight",
+});
+
 export default function ProfilePage() {
   const { user, updateProfile, recalculate, logout, fetchProfile } = useAuthStore();
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    gender: user?.gender || "male",
-    birth_date: user?.birth_date || "",
-    height_cm: user?.height_cm || "",
-    weight_kg: user?.weight_kg || "",
-    activity_level: user?.activity_level || "sedentary",
-    goal: user?.goal || "maintain_weight",
-  });
+  const [form, setForm] = useState<ProfileFormState>(() => buildProfileForm(user));
   const [saving, setSaving] = useState(false);
   const [calculating, setCalculating] = useState(false);
 
@@ -29,21 +36,14 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
-      setForm({
-        gender: user.gender || "male",
-        birth_date: user.birth_date || "",
-        height_cm: user.height_cm || "",
-        weight_kg: user.weight_kg || "",
-        activity_level: user.activity_level || "sedentary",
-        goal: user.goal || "maintain_weight",
-      });
+      setForm(buildProfileForm(user));
     }
   }, [user]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      await updateProfile(form as any);
+      await updateProfile(form);
       toast.success("Saqlandi!");
     } catch {
       toast.error("Xatolik");
@@ -109,7 +109,12 @@ export default function ProfilePage() {
 
         <div className="space-y-2">
           <Label>Faollik darajasi</Label>
-          <Select value={form.activity_level} onValueChange={(v) => setForm((p) => ({ ...p, activity_level: v as any }))}>
+          <Select
+            value={form.activity_level}
+            onValueChange={(value: ProfileFormState["activity_level"]) =>
+              setForm((prev) => ({ ...prev, activity_level: value }))
+            }
+          >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -123,7 +128,10 @@ export default function ProfilePage() {
 
         <div className="space-y-2">
           <Label>Maqsad</Label>
-          <Select value={form.goal} onValueChange={(v) => setForm((p) => ({ ...p, goal: v as any }))}>
+          <Select
+            value={form.goal}
+            onValueChange={(value: ProfileFormState["goal"]) => setForm((prev) => ({ ...prev, goal: value }))}
+          >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>

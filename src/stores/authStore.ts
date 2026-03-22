@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import api from "@/lib/api";
+import api, { clearAuthTokens } from "@/lib/api";
 import type { UserProfile } from "@/lib/types";
 
 interface AuthState {
@@ -24,7 +24,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     const token = localStorage.getItem("access_token");
     if (token) {
       set({ accessToken: token });
-      api.get("/auth/me/").then(({ data }) => set({ user: data, isLoading: false })).catch(() => set({ isLoading: false }));
+      api
+        .get("/auth/me/")
+        .then(({ data }) => set({ user: data, isLoading: false }))
+        .catch(() => {
+          clearAuthTokens();
+          set({ user: null, accessToken: null, isLoading: false });
+        });
     } else {
       set({ isLoading: false });
     }
@@ -44,8 +50,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout() {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    clearAuthTokens();
     set({ user: null, accessToken: null });
   },
 

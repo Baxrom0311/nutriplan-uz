@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import { getApiErrorMessage } from "@/lib/apiError";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,8 +22,8 @@ export default function LoginPage() {
     try {
       await login(email, password);
       navigate("/dashboard");
-    } catch (err: any) {
-      setError(err.response?.data?.detail || "Login xatoligi. Qayta urinib ko'ring.");
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, "Login xatoligi. Qayta urinib ko'ring."));
     } finally {
       setLoading(false);
     }

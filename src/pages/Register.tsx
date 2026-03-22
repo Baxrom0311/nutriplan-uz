@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import { getApiErrorMessage } from "@/lib/apiError";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,10 +27,8 @@ export default function RegisterPage() {
     try {
       await register(form);
       navigate("/login");
-    } catch (err: any) {
-      const d = err.response?.data;
-      const msg = d ? Object.values(d).flat().join(" ") : "Ro'yxatdan o'tishda xatolik";
-      setError(msg);
+    } catch (error: unknown) {
+      setError(getApiErrorMessage(error, "Ro'yxatdan o'tishda xatolik"));
     } finally {
       setLoading(false);
     }
