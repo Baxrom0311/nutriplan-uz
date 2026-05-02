@@ -13,6 +13,7 @@ import Dashboard from "@/pages/Dashboard";
 import FoodLog from "@/pages/FoodLog";
 import Progress from "@/pages/Progress";
 import Profile from "@/pages/Profile";
+import AIChat from "@/pages/AIChat";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/food-log" element={<FoodLog />} />
               <Route path="/progress" element={<Progress />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/ai-chat" element={<AIChat />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
