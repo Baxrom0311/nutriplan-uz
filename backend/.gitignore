@@ -1,0 +1,101 @@
+# ============================================
+# Python
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ============================================
+# Virtual Environment
+# ============================================
+venv/
+env/
+.venv/
+.env/
+
+# ============================================
+# Environment Variables
+# ============================================
+.env
+.env.local
+.env.production
+.env.staging
+
+# ============================================
+# Django
+# ============================================
+*.log
+db.sqlite3
+db.sqlite3-journal
+static/
+staticfiles/
+media/
+*.pot
+*.mo
+
+# ============================================
+# IDE / Editor
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.classpath
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# OS Files
+# ============================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# ============================================
+# Docker
+# ============================================
+docker-compose.override.yml
+
+# ============================================
+# Coverage & Testing
+# ============================================
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# ============================================
+# Celery
+# ============================================
+celerybeat-schedule
+celerybeat.pid
+
+# ============================================
+# Misc
+# ============================================
+*.bak
+*.tmp
+*.temp
+.gemini/

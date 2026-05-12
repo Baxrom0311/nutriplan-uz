@@ -1,0 +1,10 @@
+django==4.2.*
+djangorestframework==3.14.*
+djangorestframework-simplejwt==5.*
+python-decouple==3.*
+django-cors-headers==4.*
+whitenoise==6.*
+Pillow==10.*
+requests==2.*
+drf-yasg==1.21.*
+pyyaml==6.*

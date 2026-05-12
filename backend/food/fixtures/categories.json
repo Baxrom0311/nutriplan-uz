@@ -1,0 +1,62 @@
+[
+  {
+    "model": "food.foodcategory",
+    "pk": 1,
+    "fields": { "name": "Fruits", "name_uz": "Mevalar", "icon": "🍎", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 2,
+    "fields": { "name": "Vegetables", "name_uz": "Sabzavotlar", "icon": "🥦", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 3,
+    "fields": { "name": "Grains & Pasta", "name_uz": "Don mahsulotlari va makaron", "icon": "🌾", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 4,
+    "fields": { "name": "Meat & Poultry", "name_uz": "Go'sht va parranda", "icon": "🥩", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 5,
+    "fields": { "name": "Fish & Seafood", "name_uz": "Baliq va dengiz mahsulotlari", "icon": "🐟", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 6,
+    "fields": { "name": "Dairy & Eggs", "name_uz": "Sut mahsulotlari va tuxum", "icon": "🥚", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 7,
+    "fields": { "name": "Nuts & Seeds", "name_uz": "Yong'oqlar va urug'lar", "icon": "🥜", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 8,
+    "fields": { "name": "Oils & Fats", "name_uz": "Yog'lar", "icon": "🛢️", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 9,
+    "fields": { "name": "Drinks", "name_uz": "Ichimliklar", "icon": "🥤", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 10,
+    "fields": { "name": "Sweets", "name_uz": "Shirinliklar", "icon": "🍫", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 11,
+    "fields": { "name": "Fast Food", "name_uz": "Tez-pishar ovqatlar", "icon": "🍔", "created_at": "2024-01-01T00:00:00Z" }
+  },
+  {
+    "model": "food.foodcategory",
+    "pk": 12,
+    "fields": { "name": "Imported via API", "name_uz": "API orqali import qilingan", "icon": "🌐", "created_at": "2024-01-01T00:00:00Z" }
+  }
+]
