@@ -19,14 +19,36 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    try {
-      await login(email, password);
-      navigate("/dashboard");
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, "Login xatoligi. Qayta urinib ko'ring."));
-    } finally {
-      setLoading(false);
+    
+    // Retry logic for cold start
+    let attempts = 0;
+    const maxAttempts = 2;
+    
+    while (attempts < maxAttempts) {
+      try {
+        await login(email, password);
+        navigate("/dashboard");
+        return;
+      } catch (error: unknown) {
+        attempts++;
+        
+        // Agar 500 xatosi va birinchi urinish bo'lsa, qayta urinish
+        const errorMessage = getApiErrorMessage(error, "");
+        const is500Error = errorMessage.includes("500") || errorMessage.includes("Network Error");
+        
+        if (is500Error && attempts < maxAttempts) {
+          setError("Server uyg'onmoqda, qayta urinilmoqda...");
+          await new Promise(resolve => setTimeout(resolve, 2000)); // 2 soniya kutish
+          continue;
+        }
+        
+        // Oxirgi urinish yoki boshqa xato
+        setError(getApiErrorMessage(error, "Login xatoligi. Qayta urinib ko'ring."));
+        break;
+      }
     }
+    
+    setLoading(false);
   };
 
   return (

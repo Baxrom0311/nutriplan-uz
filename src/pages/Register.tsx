@@ -24,14 +24,34 @@ export default function RegisterPage() {
       return;
     }
     setLoading(true);
-    try {
-      await register(form);
-      navigate("/login");
-    } catch (error: unknown) {
-      setError(getApiErrorMessage(error, "Ro'yxatdan o'tishda xatolik"));
-    } finally {
-      setLoading(false);
+    
+    // Retry logic for cold start
+    let attempts = 0;
+    const maxAttempts = 2;
+    
+    while (attempts < maxAttempts) {
+      try {
+        await register(form);
+        navigate("/login");
+        return;
+      } catch (error: unknown) {
+        attempts++;
+        
+        const errorMessage = getApiErrorMessage(error, "");
+        const is500Error = errorMessage.includes("500") || errorMessage.includes("Network Error");
+        
+        if (is500Error && attempts < maxAttempts) {
+          setError("Server uyg'onmoqda, qayta urinilmoqda...");
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          continue;
+        }
+        
+        setError(getApiErrorMessage(error, "Ro'yxatdan o'tishda xatolik"));
+        break;
+      }
     }
+    
+    setLoading(false);
   };
 
   return (
