@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuthStore } from "@/stores/authStore";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AppLayout from "@/components/AppLayout";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -14,6 +15,7 @@ import FoodLog from "@/pages/FoodLog";
 import Progress from "@/pages/Progress";
 import Profile from "@/pages/Profile";
 import AIChat from "@/pages/AIChat";
+import Insights from "@/pages/Insights";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Sonner />
+      <PWAInstallPrompt />
       <BrowserRouter>
         <AuthInit>
           <Routes>
@@ -38,6 +41,7 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/food-log" element={<FoodLog />} />
               <Route path="/progress" element={<Progress />} />
+              <Route path="/insights" element={<Insights />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/ai-chat" element={<AIChat />} />
             </Route>

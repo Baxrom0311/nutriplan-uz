@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { LayoutDashboard, UtensilsCrossed, TrendingUp, User, Leaf, LogOut, Bot } from "lucide-react";
+import { LayoutDashboard, UtensilsCrossed, TrendingUp, User, Leaf, LogOut, Bot, Sparkles } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ const navItems = [
   { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/food-log", icon: UtensilsCrossed, label: "Ovqat jurnali" },
   { to: "/progress", icon: TrendingUp, label: "Progress" },
+  { to: "/insights", icon: Sparkles, label: "AI Xulosalar" },
   { to: "/ai-chat", icon: Bot, label: "AI Maslahat" },
   { to: "/profile", icon: User, label: "Profil" },
 ];
