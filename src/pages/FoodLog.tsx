@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import api from "@/lib/api";
 import type { Meal, MealType } from "@/lib/types";
 import { MEAL_TYPE_LABELS } from "@/lib/types";
@@ -6,8 +6,9 @@ import AddFoodModal from "@/components/AddFoodModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getTodayDateInputValue, shiftDateInputValue } from "@/lib/date";
-import { Plus, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Trash2, ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 const MEAL_TYPES: MealType[] = ["breakfast", "morning_snack", "lunch", "snack", "dinner", "evening_snack"];
 
@@ -16,6 +17,8 @@ export default function FoodLogPage() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
   const [foodModal, setFoodModal] = useState<{ open: boolean; mealType: MealType | null }>({ open: false, mealType: null });
+  const [uploadingPhoto, setUploadingPhoto] = useState<MealType | null>(null);
+  const fileInputRefs = useRef<Record<MealType, HTMLInputElement | null>>({} as Record<MealType, HTMLInputElement | null>);
 
   const fetchMeals = useCallback(async () => {
     setLoading(true);
@@ -42,6 +45,27 @@ export default function FoodLogPage() {
       fetchMeals();
     } catch {
       toast.error("Xatolik");
+    }
+  };
+
+  const handlePhotoUpload = async (mealType: MealType, file: File) => {
+    setUploadingPhoto(mealType);
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("date", date);
+    formData.append("meal_type", mealType);
+
+    try {
+      const response = await api.post("/meals/photo-analyze/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast.success(`AI tahlil: ${response.data.food_name} (${response.data.weight_g}g, ${Math.round(response.data.calories)} kcal)`);
+      fetchMeals();
+    } catch (error) {
+      const axiosError = error as AxiosError<{ detail?: string }>;
+      toast.error(axiosError.response?.data?.detail || "Rasm tahlil qilishda xatolik");
+    } finally {
+      setUploadingPhoto(null);
     }
   };
 
@@ -86,6 +110,31 @@ export default function FoodLogPage() {
                         {Math.round(parseFloat(meal.total_calories || "0"))} kcal
                       </span>
                     )}
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => fileInputRefs.current[type]?.click()}
+                      disabled={uploadingPhoto === type}
+                      title="Rasm yuklash"
+                    >
+                      {uploadingPhoto === type ? (
+                        <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                      ) : (
+                        <Camera className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <input
+                      ref={(el) => (fileInputRefs.current[type] = el)}
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handlePhotoUpload(type, file);
+                        e.target.value = "";
+                      }}
+                    />
                     <Button size="sm" variant="outline" onClick={() => setFoodModal({ open: true, mealType: type })}>
                       <Plus className="h-3.5 w-3.5 mr-1" />
                       Qo'shish
